@@ -1,5 +1,11 @@
 import { CLOSE_ICON, MESSAGE_ICON, styles } from "./assets.js";
 
+function unescapeStr(str) {
+  return str.replace(/\\u[\dA-F]{4}/gi, function (match) {
+    return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+  });
+}
+
 class MessageWidget {
   constructor(position = "bottom-right") {
     this.position = this.getPosition(position);
@@ -65,7 +71,7 @@ class MessageWidget {
 
     try {
       const chatbotResponse = await this.sendChatbotRequest(userMessage);
-      this.displayMessage(chatbotResponse.answer, 'bot');
+      this.displayMessage(chatbotResponse, 'bot');
     } catch (error) {
       console.error('Error fetching chatbot response:', error);
     }
@@ -77,17 +83,19 @@ class MessageWidget {
 
 async sendChatbotRequest(query) {
   const chatbot_url = 'https://aichain-chat-api-dw2j52225q-uc.a.run.app';
-  const endpoint = `${chatbot_url}/conversation`;
+  const endpoint = `https://aichain-chat-api-dw2j52225q-uc.a.run.app/conversation_stream`;
   const secret_token = 'chatpgt-token-xkaos2z';
   const headers = {'token': secret_token};
   const user_id = 'paRhdf57TlSWwNDdw3alLrgtNp83'; // modificar el user_id, extraerlo de localStorage en la App
 
   const data = {
-    "chatbotId": '5dUrCBBKcE2UeJGbpb7i', //modificar el chatbotId y que sea iterable al usuario dar embed on site (nota de parche)
+    "chatbotId": '5dUrCBBKcE2UeJGbpb7i',
     "userId": user_id,
     'messages': [  
       {'role':'user', 'content': query},
-    ]
+    ],
+    stream: true,
+    model: 'gpt-3.5-turbo',
   };
 
   try {
@@ -104,8 +112,43 @@ async sendChatbotRequest(query) {
       throw new Error('Network response was not ok');
     }
 
-    const responseData = await response.json();
-    return responseData;
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let partialData = '';
+    let chatbotMessages = [];
+
+    let chatbotMessage = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+    
+      if (done) {
+        break;
+      }
+    
+      partialData += new TextDecoder("utf-8").decode(value);
+    
+      if (partialData.startsWith("data: ")) {
+        const eventData = partialData.substring(6);
+    
+        if (eventData.includes("content")) {
+          const contentStart = eventData.indexOf('"content": "') + 12;
+          const contentEnd = eventData.indexOf('",', contentStart);
+          if (contentStart !== -1 && contentEnd !== -1) {
+            const chatMessage = eventData.substring(contentStart, contentEnd);
+            console.log("Chatbot Message:", chatMessage);
+            
+            // Mostrar el mensaje en tiempo real en la interfaz
+            this.displayMessage(chatMessage, 'bot');
+          }
+        }
+    
+        partialData = partialData.substring(eventData.length + 7);
+      }
+    }
+
+    return chatbotMessage;
+
   } catch (error) {
     throw error;
   }
@@ -113,12 +156,32 @@ async sendChatbotRequest(query) {
 
 displayMessage(text, sender) {
   const chatBox = document.querySelector('.chat-box');
-  const chatMessage = document.createElement('div');
-  chatMessage.classList.add('chat-message', `message-${sender}`);
-  chatMessage.innerHTML = `<p>${text}</p>`;
-  chatBox.appendChild(chatMessage);
+  
+  // Buscar el último mensaje en el chat
+  const lastMessage = chatBox.querySelector('.chat-message:last-child');
+  
+  // Si el último mensaje es del mismo remitente, agregar al contenido existente
+  if (lastMessage && lastMessage.classList.contains(`message-${sender}`)) {
+    const messageContent = lastMessage.querySelector('.message-content');
+    messageContent.textContent += unescapeStr(text);
+  } else {
+    // Si es un nuevo remitente o el primer mensaje, crear un nuevo elemento de mensaje
+    const chatMessage = document.createElement('div');
+    chatMessage.classList.add('chat-message', `message-${sender}`);
+    
+    const messageContent = document.createElement('p');
+    messageContent.classList.add('message-content');
+    messageContent.textContent = unescapeStr(text);
+    
+    chatMessage.appendChild(messageContent);
+    chatBox.appendChild(chatMessage);
+  }
+  
   chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+
+
   createWidgetContent() {
     this.widgetContainer.innerHTML = `
     <header class="widget__header">
@@ -174,3 +237,4 @@ function initializeWidget() {
 }
 
 initializeWidget();
+
