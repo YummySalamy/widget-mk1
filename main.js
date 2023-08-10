@@ -1,4 +1,4 @@
-import { CLOSE_ICON, MESSAGE_ICON, styles } from "./assets.js";
+import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles } from "./assets.js";
 
 function unescapeStr(str) {
   return str.replace(/\\u[\dA-F]{4}/gi, function (match) {
@@ -210,9 +210,12 @@ displayMessage(text, sender) {
 
   injectStyles() {
     const styleTag = document.createElement("style");
+    const secondStyleTag = document.createElement("style");
     styleTag.innerHTML = styles.replace(/^\s+|\n/gm, "");
+    secondStyleTag.innerHTML = aditionalStyles.replace(/^\s+|\n/gm, "");
 
     document.head.appendChild(styleTag);
+    document.body.appendChild(secondStyleTag);
   }
 
   toggleOpen() {

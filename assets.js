@@ -1,7 +1,62 @@
+
+const script = document.getElementById('chatbotParameters');
+let chatbotId = script.getAttribute('chatbotId');
+console.log(typeof chatbotId);
+const background_color ='';
+const url = `https://dev-aichain-chatbot-upload-dw2j52225q-uc.a.run.app/chatbot/`;
+const secret_token = 123456;
+const token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNmM2I1YWRhM2NhMzkxNTQ4ZDM1OTJiMzU5MjkyM2UzNjAxMmI5MTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vaWduZW91cy1zYW5kYm94LTM4NzkxNSIsImF1ZCI6ImlnbmVvdXMtc2FuZGJveC0zODc5MTUiLCJhdXRoX3RpbWUiOjE2OTE2NzUyNzgsInVzZXJfaWQiOiJwYVJoZGY1N1RsU1d3TkRkdzNhbExyZ3ROcDgzIiwic3ViIjoicGFSaGRmNTdUbFNXd05EZHczYWxMcmd0TnA4MyIsImlhdCI6MTY5MTY3NTI3OCwiZXhwIjoxNjkxNjc4ODc4LCJlbWFpbCI6InNlYmFzdGlhbmVzY29iYXJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInNlYmFzdGlhbmVzY29iYXJAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.FbVpMQsllBJw9q5X-OyQtd3RIP1hxXQW_mUvQptZ9roxY-cNGIVSNzTxKZ4k8c2_m7JOuS_YRkBVL6l0HGYqstUhcEOv99aErpe0lFG6c0lmMyPLn4Z3Q_sDKrFk7-3O8F2DnkXfuIn90nAhx8Nk7oxC-3jK3zyl6JZDd8OhfU2Vmbx47lug1giLpRikFx3Yki-655HXm4AyPJfYOx9ISJo0DU95X2qsv6l8ytF6tdXnmi4WxrHFpXeEH_c9DanvGt2giW2SN1jIIhaXR5-Ff65txA3_rKJCfJrykIS8d0OMcF1o9mjma2t4l1khf1lVMq3CGLB78J5mKmtH29rWQg";
+const params = {
+    chatbot_id: chatbotId
+};
+
+const headers = {
+    Authorization: `Bearer ${token}`,
+    token: secret_token
+};
+
+const urlWithParams = new URL(url);
+urlWithParams.search = new URLSearchParams(params);
+
+async function fetchData() {
+  try {
+      const response = await fetch(urlWithParams, {
+          method: 'GET',
+          headers: headers
+      });
+
+      console.log(`Status code: ${response.status}`);
+
+      if (response.status === 200) {
+          const responseData = await response.json();
+          background_color = responseData.background_color;
+          var window_chatbot_name = responseData.window_chatbot_name;
+
+          console.log(`background_color: ${background_color}`);
+          console.log(`window_chatbot_name: ${window_chatbot_name}`);
+      } else {
+          console.log('Error:', response.statusText);
+      }
+  } catch (error) {
+      console.error('Error:', error);
+  }
+}
+
+fetchData();
+
+function getStylesA(chatbotID) {
+  return;
+};
+
 export const styles = `
   .widget__container * {
     box-sizing: border-box;
     z-index: 999;
+  }
+  .style_picker {
+    display: flex;
+    width: 100%;
+    height: 40px;
   }
 
   .message {
@@ -56,7 +111,7 @@ export const styles = `
 
   .message-bot {
     align-self: flex-start;
-    background-color: #f0f0f0;
+    background: linear-gradient(135deg, #f0f0f0, #ccc);
     color: #333;
     border-bottom-left-radius: 2px;
   }
@@ -192,57 +247,57 @@ export const styles = `
     font-weight: 400;
     margin-bottom: 8px;
   }
-.button-45 {
-  align-items: center;
-  background-color: #FFE7E7;
-  background-position: 0 0;
-  border: 1px solid #FEE0E0;
-  border-radius: 20px;
-  box-sizing: border-box;
-  color: #D33A2C;
-  cursor: pointer;
-  display: flex;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 33.4929px;
-  padding: 4px 12px;
-  text-align: left;
-  text-decoration: none;
-  text-shadow: none;
-  text-underline-offset: 1px;
-  transition: border .2s ease-in-out,box-shadow .2s ease-in-out;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  white-space: nowrap;
-  word-break: break-word;
-}
+  .button-45 {
+    align-items: center;
+    background-color: #FFE7E7;
+    background-position: 0 0;
+    border: 1px solid #FEE0E0;
+    border-radius: 20px;
+    box-sizing: border-box;
+    color: #D33A2C;
+    cursor: pointer;
+    display: flex;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 33.4929px;
+    padding: 4px 12px;
+    text-align: left;
+    text-decoration: none;
+    text-shadow: none;
+    text-underline-offset: 1px;
+    transition: border .2s ease-in-out,box-shadow .2s ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    word-break: break-word;
+  }
 
-.button-45:active,
-.button-45:hover,
-.button-45:focus {
-  outline: 0;
-}
+  .button-45:active,
+  .button-45:hover,
+  .button-45:focus {
+    outline: 0;
+  }
 
 
-.button-45:active {
-  background-color: #D33A2C;
-  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
-  color: #FFFFFF;
-}
+  .button-45:active {
+    background-color: #D33A2C;
+    box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
+    color: #FFFFFF;
+  }
 
-.button-45:hover {
-  background-color: #FFE3E3;
-  border-color: #FAA4A4;
-}
+  .button-45:hover {
+    background-color: #FFE3E3;
+    border-color: #FAA4A4;
+  }
 
-.button-45:active:hover,
-.button-45:focus:hover,
-.button-45:focus {
-  background-color: #D33A2C;
-  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
-  color: #FFFFFF;
-}
+  .button-45:active:hover,
+  .button-45:focus:hover,
+  .button-45:focus {
+    background-color: #D33A2C;
+    box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
+    color: #FFFFFF;
+  }
 .inputGroup {
   font-family: 'Segoe UI', sans-serif;
   margin: 1em 0 1em 0;
@@ -286,7 +341,33 @@ export const styles = `
 .inputGroup :is(input:focus, input:valid) {
   border-color: rgb(150, 150, 200);
 }
+
 `;
+
+export const aditionalStyles = styles + `
+.widget__header {
+  padding: 1px;
+  align-self: flex-end;
+  background: ${background_color};
+  color: #fff;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-align: center;
+}
+.message-user {
+  align-self: flex-end;
+  background: ${background_color};
+  color: #fff;
+  border-bottom-right-radius: 2px;
+}
+
+.message-bot {
+  align-self: flex-start;
+  background: linear-gradient(135deg, #f0f0f0, #ccc);
+  color: #333;
+  border-bottom-left-radius: 2px;
+}
+`
 
 
 export const MESSAGE_ICON = `
