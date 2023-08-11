@@ -1,4 +1,4 @@
-import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles } from "./assets.js";
+import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles, chatbotWindowName, welcomeMessage, placeHolder } from "./assets.js";
 
 function unescapeStr(str) {
   return str.replace(/\\u[\dA-F]{4}/gi, function (match) {
@@ -12,6 +12,7 @@ class MessageWidget {
     this.open = false;
     this.initialize();
     this.injectStyles();
+    this.createChatbotSession();
   }
 
   position = "";
@@ -81,23 +82,61 @@ class MessageWidget {
 
 }
 
+async createChatbotSession() {
+  const url = "https://dev-aichain-chatbot-upload-dw2j52225q-uc.a.run.app/chatbot/sessions";
+  const script = document.getElementById('chatbotParameters')
+  const chatbotId = script.getAttribute('chatbotId');
+  const channel_type = "WEB";
+  const userId = script.getAttribute('userId');
+  const chatbotSessionId = localStorage.getItem('chatbotSessionId');
+  const sessionId = null;
+
+  const data = {
+    chatbot_id: chatbotId,
+    channel_type: channel_type,
+    user_id: userId,
+    session_id: chatbotSessionId,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create chatbot session");
+    }
+
+    const responseData = await response.json();
+    this.chatbotSessionId = responseData.session_id;
+    localStorage.setItem('chatbotSessionId', this.chatbotSessionId);
+  } catch (error) {
+    console.error("Error creating chatbot session:", error);
+  }
+}
+
 async sendChatbotRequest(query) {
   const script = document.getElementById('chatbotParameters');
   const chatbotId = script.getAttribute('chatbotId');
   const userId = script.getAttribute('userId');
   const chatbot_url = 'https://aichain-chat-api-dw2j52225q-uc.a.run.app';
-  const endpoint = `https://aichain-chat-api-dw2j52225q-uc.a.run.app/conversation_stream`;
+  const endpoint = `https://aichain-chat-api-v2-dw2j52225q-uc.a.run.app/conversation_stream`;
   const secret_token = 'chatpgt-token-xkaos2z';
   const headers = {'token': secret_token};
+  const chatbotSessionId = localStorage.getItem('chatbotSessionId');
 
   const data = {
-    "chatbotId": chatbotId,
-    "userId": userId,
-    'messages': [  
-      {'role':'user', 'content': query},
-    ],
-    stream: true,
-    model: 'gpt-3.5-turbo',
+    question: query,
+    metadata: {
+      "userId": userId,
+      "sessionId": chatbotSessionId,
+      "chatbotId": chatbotId,
+      "channelType": "WEB"
+    }
   };
 
   try {
@@ -120,6 +159,7 @@ async sendChatbotRequest(query) {
     let chatbotMessages = [];
 
     let chatbotMessage = '';
+    let finalMessage = '';
 
     while (true) {
       const { done, value } = await reader.read();
@@ -139,20 +179,66 @@ async sendChatbotRequest(query) {
           if (contentStart !== -1 && contentEnd !== -1) {
             const chatMessage = eventData.substring(contentStart, contentEnd);
             console.log("Chatbot Message:", chatMessage);
-            
+            finalMessage += chatMessage;
             // Mostrar el mensaje en tiempo real en la interfaz
             this.displayMessage(chatMessage, 'bot');
           }
         }
     
         partialData = partialData.substring(eventData.length + 7);
+
       }
     }
-
+    this.addMessageSession(query, finalMessage);
+    console.log*("Final Message:", finalMessage);
     return chatbotMessage;
 
   } catch (error) {
     throw error;
+  }
+}
+
+async addMessageSession(question, answer) {
+  const decodedAnswer = unescapeStr(answer);
+  const url = "https://aichain-chat-api-v2-dw2j52225q-uc.a.run.app/add_message";
+  const script = document.getElementById('chatbotParameters')
+  const chatbotId = script.getAttribute('chatbotId');
+  const channel_type = "WEB";
+  const userId = script.getAttribute('userId');
+  const chatbotSessionId = localStorage.getItem('chatbotSessionId');
+  const secret_token = 'chatpgt-token-xkaos2z';
+  const headers = {'token': secret_token};
+  const sessionId = null;
+
+  const data = {
+    question: question,
+    answer: decodedAnswer,
+    metadata: {
+      chatbotId: chatbotId,
+      channelType: channel_type,
+      userId: userId,
+      sessionId: chatbotSessionId,
+    }
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers, 
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create chatbot session");
+    }
+
+    const responseData = await response.json();
+
+  } catch (error) {
+    console.error("Error :", error);
   }
 }
 
@@ -178,6 +264,7 @@ displayMessage(text, sender) {
   }
   chatContainer.scrollTop = chatContainer.scrollHeight;
   chatBox.scrollTop = chatBox.scrollHeight;
+  
 }
 
 
@@ -185,25 +272,28 @@ displayMessage(text, sender) {
   createWidgetContent() {
     this.widgetContainer.innerHTML = `
     <header class="widget__header">
-      <h2>AI CHAIN</h2>
+      <h2>${chatbotWindowName}</h2>
       <p>Asistente virtual inteligente</p>
     </header>
 
-  <div class="chat-container">
-    <div class="chat-box">
-      <div class="chat-message message-bot">
-        ¿Hola, en qué puedo ayudarte? 😊
+    <div class="chat-container">
+      <div class="chat-box">
+        <div class="chat-message message-bot">
+          ${welcomeMessage}
+        </div>
       </div>
     </div>
-  </div>
 
     <form class="input-container">
     <div class="inputGroup">
       <input type="text" required="" autocomplete="off" id="messageInput">
-      <label for="name">Tu mensaje</label>
+      <label for="name">${placeHolder}</label>
     </div>
       <button class="button-45" role="button" type="submit">Enviar</button>
     </form>
+    <footer class="poweredByContainer">
+      <p class="footer__text">Powered by Aichain</p>
+    </footer>
     `;
   }
 

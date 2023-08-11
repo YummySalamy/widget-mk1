@@ -2,7 +2,6 @@
 const script = document.getElementById('chatbotParameters');
 let chatbotId = script.getAttribute('chatbotId');
 console.log(typeof chatbotId);
-const background_color ='';
 const url = `https://dev-aichain-chatbot-upload-dw2j52225q-uc.a.run.app/chatbot/`;
 const secret_token = 123456;
 const token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNmM2I1YWRhM2NhMzkxNTQ4ZDM1OTJiMzU5MjkyM2UzNjAxMmI5MTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vaWduZW91cy1zYW5kYm94LTM4NzkxNSIsImF1ZCI6ImlnbmVvdXMtc2FuZGJveC0zODc5MTUiLCJhdXRoX3RpbWUiOjE2OTE2NzUyNzgsInVzZXJfaWQiOiJwYVJoZGY1N1RsU1d3TkRkdzNhbExyZ3ROcDgzIiwic3ViIjoicGFSaGRmNTdUbFNXd05EZHczYWxMcmd0TnA4MyIsImlhdCI6MTY5MTY3NTI3OCwiZXhwIjoxNjkxNjc4ODc4LCJlbWFpbCI6InNlYmFzdGlhbmVzY29iYXJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInNlYmFzdGlhbmVzY29iYXJAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.FbVpMQsllBJw9q5X-OyQtd3RIP1hxXQW_mUvQptZ9roxY-cNGIVSNzTxKZ4k8c2_m7JOuS_YRkBVL6l0HGYqstUhcEOv99aErpe0lFG6c0lmMyPLn4Z3Q_sDKrFk7-3O8F2DnkXfuIn90nAhx8Nk7oxC-3jK3zyl6JZDd8OhfU2Vmbx47lug1giLpRikFx3Yki-655HXm4AyPJfYOx9ISJo0DU95X2qsv6l8ytF6tdXnmi4WxrHFpXeEH_c9DanvGt2giW2SN1jIIhaXR5-Ff65txA3_rKJCfJrykIS8d0OMcF1o9mjma2t4l1khf1lVMq3CGLB78J5mKmtH29rWQg";
@@ -29,8 +28,14 @@ async function fetchData() {
 
       if (response.status === 200) {
           const responseData = await response.json();
-          background_color = responseData.background_color;
-          var window_chatbot_name = responseData.window_chatbot_name;
+          const background_color = responseData.background_color;
+          const window_chatbot_name = responseData.window_chatbot_name;
+          const welcomeMessage = responseData.welcome_message;
+          const placeHolder = responseData.place_holder;
+          localStorage.setItem('background_color', background_color);
+          localStorage.setItem('window_chatbot_name', window_chatbot_name);
+          localStorage.setItem('welcome_message', welcomeMessage);
+          localStorage.setItem('place_holder', placeHolder);
 
           console.log(`background_color: ${background_color}`);
           console.log(`window_chatbot_name: ${window_chatbot_name}`);
@@ -47,6 +52,10 @@ fetchData();
 function getStylesA(chatbotID) {
   return;
 };
+
+export const chatbotWindowName = localStorage.getItem('window_chatbot_name');
+export const welcomeMessage = localStorage.getItem('welcome_message');
+export const placeHolder = localStorage.getItem('place_holder');
 
 export const styles = `
   .widget__container * {
@@ -342,7 +351,17 @@ export const styles = `
   border-color: rgb(150, 150, 200);
 }
 
+.poweredByContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  height: 40px;
+}
+
 `;
+
+const background_color = localStorage.getItem('background_color');
 
 export const aditionalStyles = styles + `
 .widget__header {
