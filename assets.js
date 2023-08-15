@@ -85,7 +85,7 @@ export const styles = `
 
   .chat-container {
     height: 500px;
-    max-height: 600px;
+    max-height: 700px;
     overflow-y: auto;
     auto-overflow: scroll;
     scroll-behavior: auto;
@@ -290,7 +290,7 @@ export const styles = `
 
 
   .button-45:active {
-    background-color: #D33A2C;
+    background-color: #ccc;
     box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
     color: #FFFFFF;
   }
@@ -310,6 +310,8 @@ export const styles = `
 .inputGroup {
   font-family: 'Segoe UI', sans-serif;
   margin: 1em 0 1em 0;
+  width: 100%;
+  box-sizing: border-box;
   max-width: 100%;
   position: relative;
   display: flex;
@@ -380,11 +382,30 @@ export const aditionalStyles = styles + `
   border-bottom-right-radius: 2px;
 }
 
-.message-bot {
-  align-self: flex-start;
-  background: linear-gradient(135deg, #f0f0f0, #ccc);
-  color: #333;
-  border-bottom-left-radius: 2px;
+.button-45 {
+  align-items: center;
+  background-color: ${background_color};
+  background-position: 0 0;
+  border: 1px solid #FEE0E0;
+  border-radius: 20px;
+  box-sizing: border-box;
+  color: #D33A2C;
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 33.4929px;
+  padding: 4px 12px;
+  text-align: left;
+  text-decoration: none;
+  text-shadow: none;
+  text-underline-offset: 1px;
+  transition: border .2s ease-in-out,box-shadow .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  word-break: break-word;
 }
 `
 

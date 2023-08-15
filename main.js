@@ -12,7 +12,6 @@ class MessageWidget {
     this.open = false;
     this.initialize();
     this.injectStyles();
-    this.createChatbotSession();
   }
 
   position = "";
@@ -112,6 +111,15 @@ async createChatbotSession() {
     }
 
     const responseData = await response.json();
+    const chatMessages = responseData.messages;
+
+    for (const messageId in chatMessages) {
+      const message = chatMessages[messageId];
+      const sender = message.reaction === "NORMAL" ? "bot" : "user";
+      console.log("Message:", message);
+      this.displayMessage(message.answer, sender);
+    }
+
     this.chatbotSessionId = responseData.session_id;
     localStorage.setItem('chatbotSessionId', this.chatbotSessionId);
   } catch (error) {
@@ -314,6 +322,7 @@ displayMessage(text, sender) {
       this.widgetIcon.classList.add("widget__hidden");
       this.closeIcon.classList.remove("widget__hidden");
       this.widgetContainer.classList.remove("widget__hidden");
+      this.createChatbotSession();
     } else {
       this.createWidgetContent();
       this.widgetIcon.classList.remove("widget__hidden");
