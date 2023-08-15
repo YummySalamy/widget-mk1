@@ -117,7 +117,10 @@ async createChatbotSession() {
       const message = chatMessages[messageId];
       const sender = message.reaction === "NORMAL" ? "bot" : "user";
       console.log("Message:", message);
-      this.displayMessage(message.answer, sender);
+      console.log("Sender:", sender)
+      console.log("Answer:", message.answer)
+      this.displayPreviousMessages(message.question, 'user');
+      this.displayPreviousMessages(message.answer, sender);
     }
 
     this.chatbotSessionId = responseData.session_id;
@@ -270,6 +273,21 @@ displayMessage(text, sender) {
     chatBox.appendChild(chatMessage);
     chatBox.scrollTop = chatBox.scrollHeight
   }
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+  chatBox.scrollTop = chatBox.scrollHeight;
+  
+}
+
+displayPreviousMessages(text, sender) {
+  const chatBox = document.querySelector('.chat-box');
+  const chatContainer = document.querySelector('.chat-container');
+  
+    const chatMessage = document.createElement('div');
+    chatMessage.classList.add('chat-message', `message-${sender}`);
+    chatMessage.innerHTML = `<div class="message-content">${unescapeStr(text)}</div>`;
+    
+    chatBox.appendChild(chatMessage);
+    chatBox.scrollTop = chatBox.scrollHeight
   chatContainer.scrollTop = chatContainer.scrollHeight;
   chatBox.scrollTop = chatBox.scrollHeight;
   
