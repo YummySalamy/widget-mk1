@@ -2,7 +2,7 @@
 const script = document.getElementById('chatbotParameters');
 let chatbotId = script.getAttribute('chatbotId');
 console.log(typeof chatbotId);
-const url = `https://dev-aichain-chatbot-upload-dw2j52225q-uc.a.run.app/chatbot/`;
+const url = `https://dev-aichain-chatbot-users-qd5u6w2c6q-uc.a.run.app/chatbot/`;
 const secret_token = 123456;
 const token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNmM2I1YWRhM2NhMzkxNTQ4ZDM1OTJiMzU5MjkyM2UzNjAxMmI5MTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vaWduZW91cy1zYW5kYm94LTM4NzkxNSIsImF1ZCI6ImlnbmVvdXMtc2FuZGJveC0zODc5MTUiLCJhdXRoX3RpbWUiOjE2OTE2NzUyNzgsInVzZXJfaWQiOiJwYVJoZGY1N1RsU1d3TkRkdzNhbExyZ3ROcDgzIiwic3ViIjoicGFSaGRmNTdUbFNXd05EZHczYWxMcmd0TnA4MyIsImlhdCI6MTY5MTY3NTI3OCwiZXhwIjoxNjkxNjc4ODc4LCJlbWFpbCI6InNlYmFzdGlhbmVzY29iYXJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInNlYmFzdGlhbmVzY29iYXJAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.FbVpMQsllBJw9q5X-OyQtd3RIP1hxXQW_mUvQptZ9roxY-cNGIVSNzTxKZ4k8c2_m7JOuS_YRkBVL6l0HGYqstUhcEOv99aErpe0lFG6c0lmMyPLn4Z3Q_sDKrFk7-3O8F2DnkXfuIn90nAhx8Nk7oxC-3jK3zyl6JZDd8OhfU2Vmbx47lug1giLpRikFx3Yki-655HXm4AyPJfYOx9ISJo0DU95X2qsv6l8ytF6tdXnmi4WxrHFpXeEH_c9DanvGt2giW2SN1jIIhaXR5-Ff65txA3_rKJCfJrykIS8d0OMcF1o9mjma2t4l1khf1lVMq3CGLB78J5mKmtH29rWQg";
 const params = {
@@ -32,10 +32,12 @@ async function fetchData() {
           const window_chatbot_name = responseData.window_chatbot_name;
           const welcomeMessage = responseData.welcome_message;
           const placeHolder = responseData.place_holder;
+          const iconUrl = responseData.icon_url;
           localStorage.setItem('background_color', background_color);
           localStorage.setItem('window_chatbot_name', window_chatbot_name);
           localStorage.setItem('welcome_message', welcomeMessage);
           localStorage.setItem('place_holder', placeHolder);
+          localStorage.setItem('icon_url', iconUrl);
 
           console.log(`background_color: ${background_color}`);
           console.log(`window_chatbot_name: ${window_chatbot_name}`);
@@ -56,8 +58,18 @@ function getStylesA(chatbotID) {
 export const chatbotWindowName = localStorage.getItem('window_chatbot_name');
 export const welcomeMessage = localStorage.getItem('welcome_message');
 export const placeHolder = localStorage.getItem('place_holder');
+export const iconUrl = localStorage.getItem('icon_url');
 
 export const styles = `
+  .icon-style {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
   .widget__container * {
     box-sizing: border-box;
     z-index: 999;
@@ -228,14 +240,6 @@ export const styles = `
     opacity: 1;
     transform: scale(1);
   }
-  .button__container {
-    border: none;
-    background-color: #f54e42;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
 
   .widget__container.hidden {
     max-height: 0px;
@@ -295,15 +299,11 @@ export const styles = `
     color: #FFFFFF;
   }
 
-  .button-45:hover {
-    background-color: #FFE3E3;
-    border-color: #FAA4A4;
-  }
 
   .button-45:active:hover,
   .button-45:focus:hover,
   .button-45:focus {
-    background-color: #D33A2C;
+    background-color: #7BDCB5;
     box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
     color: #FFFFFF;
   }
@@ -389,7 +389,7 @@ export const aditionalStyles = styles + `
   border: 1px solid #FEE0E0;
   border-radius: 20px;
   box-sizing: border-box;
-  color: #D33A2C;
+  color: #fff;
   cursor: pointer;
   display: flex;
   font-size: 1rem;
@@ -406,6 +406,18 @@ export const aditionalStyles = styles + `
   touch-action: manipulation;
   white-space: nowrap;
   word-break: break-word;
+}
+.button-45:hover {
+  background-color: #7BDCB5;
+  border-color: ${background_color};
+}
+.button__container {
+  border: none;
+  background-color: ${background_color};
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 `
 

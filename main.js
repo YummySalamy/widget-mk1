@@ -1,4 +1,4 @@
-import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles, chatbotWindowName, welcomeMessage, placeHolder } from "./assets.js";
+import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles, chatbotWindowName, welcomeMessage, placeHolder, iconUrl } from "./assets.js";
 
 function unescapeStr(str) {
   return str.replace(/\\u[\dA-F]{4}/gi, function (match) {
@@ -12,6 +12,7 @@ class MessageWidget {
     this.open = false;
     this.initialize();
     this.injectStyles();
+    this.messages = [];
   }
 
   position = "";
@@ -82,13 +83,14 @@ class MessageWidget {
 }
 
 async createChatbotSession() {
-  const url = "https://dev-aichain-chatbot-upload-dw2j52225q-uc.a.run.app/chatbot/sessions";
+  const url = "https://dev-aichain-chatbot-upload-qd5u6w2c6q-uc.a.run.app/chatbot/sessions";
   const script = document.getElementById('chatbotParameters')
   const chatbotId = script.getAttribute('chatbotId');
   const channel_type = "WEB";
   const userId = script.getAttribute('userId');
   const chatbotSessionId = localStorage.getItem('chatbotSessionId');
   const sessionId = null;
+  this.messages.length = 0;
 
   const data = {
     chatbot_id: chatbotId,
@@ -115,12 +117,15 @@ async createChatbotSession() {
 
     for (const messageId in chatMessages) {
       const message = chatMessages[messageId];
+      this.messages.push(message);
+    }
+    this.messages.sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+    for (const message of this.messages) {
       const sender = message.reaction === "NORMAL" ? "bot" : "user";
-      console.log("Message:", message);
-      console.log("Sender:", sender)
-      console.log("Answer:", message.answer)
-      this.displayPreviousMessages(message.question, 'user');
-      this.displayPreviousMessages(message.answer, sender);
+      this.displayPreviousMessages(message.question, "user");
+      this.displayPreviousMessages(message.answer, "bot");
     }
 
     this.chatbotSessionId = responseData.session_id;
@@ -134,8 +139,8 @@ async sendChatbotRequest(query) {
   const script = document.getElementById('chatbotParameters');
   const chatbotId = script.getAttribute('chatbotId');
   const userId = script.getAttribute('userId');
-  const chatbot_url = 'https://aichain-chat-api-dw2j52225q-uc.a.run.app';
-  const endpoint = `https://aichain-chat-api-v2-dw2j52225q-uc.a.run.app/conversation_stream`;
+  const chatbot_url = 'https://dev-aichain-chatbot-users-qd5u6w2c6q-uc.a.run.app';
+  const endpoint = `https://aichain-chat-api-v2-qd5u6w2c6q-uc.a.run.app/conversation_stream`;
   const secret_token = 'chatpgt-token-xkaos2z';
   const headers = {'token': secret_token};
   const chatbotSessionId = localStorage.getItem('chatbotSessionId');
@@ -211,7 +216,7 @@ async sendChatbotRequest(query) {
 
 async addMessageSession(question, answer) {
   const decodedAnswer = unescapeStr(answer);
-  const url = "https://aichain-chat-api-v2-dw2j52225q-uc.a.run.app/add_message";
+  const url = "https://aichain-chat-api-v2-qd5u6w2c6q-uc.a.run.app/add_message";
   const script = document.getElementById('chatbotParameters')
   const chatbotId = script.getAttribute('chatbotId');
   const channel_type = "WEB";
@@ -299,7 +304,7 @@ displayPreviousMessages(text, sender) {
     this.widgetContainer.innerHTML = `
     <header class="widget__header">
       <h2>${chatbotWindowName}</h2>
-      <p>Asistente virtual inteligente</p>
+      <img class='icon-style' src=${iconUrl}></img>
     </header>
 
     <div class="chat-container">
