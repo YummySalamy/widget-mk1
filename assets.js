@@ -33,11 +33,11 @@ async function fetchData() {
           const welcomeMessage = responseData.welcome_message;
           const placeHolder = responseData.place_holder;
           const iconUrl = responseData.icon_url;
-          localStorage.setItem('background_color', background_color);
-          localStorage.setItem('window_chatbot_name', window_chatbot_name);
-          localStorage.setItem('welcome_message', welcomeMessage);
-          localStorage.setItem('place_holder', placeHolder);
-          localStorage.setItem('icon_url', iconUrl);
+          localStorage.setItem('background_color', background_color || '#007bff');
+          localStorage.setItem('window_chatbot_name', window_chatbot_name  || 'Chatbot');
+          localStorage.setItem('welcome_message', welcomeMessage || 'Welcome to the chatbot');
+          localStorage.setItem('place_holder', placeHolder || 'Type a message');
+          localStorage.setItem('icon_url', iconUrl || 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png');
 
           console.log(`background_color: ${background_color}`);
           console.log(`window_chatbot_name: ${window_chatbot_name}`);
@@ -55,10 +55,10 @@ function getStylesA(chatbotID) {
   return;
 };
 
-export const chatbotWindowName = localStorage.getItem('window_chatbot_name');
-export const welcomeMessage = localStorage.getItem('welcome_message');
-export const placeHolder = localStorage.getItem('place_holder');
-export const iconUrl = localStorage.getItem('icon_url');
+export const chatbotWindowName = localStorage.getItem('window_chatbot_name') || 'Chatbot';
+export const welcomeMessage = localStorage.getItem('welcome_message') || '¡Hola!, ¿en qué puedo ayudarte?';
+export const placeHolder = localStorage.getItem('place_holder')  || 'Escribe un mensaje...';
+export const iconUrl = localStorage.getItem('icon_url') || 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png';
 
 export const styles = `
   .icon-style {
@@ -369,7 +369,7 @@ export const aditionalStyles = styles + `
 .widget__header {
   padding: 1px;
   align-self: flex-end;
-  background: ${background_color};
+  background: ${background_color || '#007bff'};
   color: #fff;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -377,14 +377,14 @@ export const aditionalStyles = styles + `
 }
 .message-user {
   align-self: flex-end;
-  background: ${background_color};
+  background: ${background_color || '#007bff'};
   color: #fff;
   border-bottom-right-radius: 2px;
 }
 
 .button-45 {
   align-items: center;
-  background-color: ${background_color};
+  background-color: ${background_color || '#007bff'};
   background-position: 0 0;
   border: 1px solid #FEE0E0;
   border-radius: 20px;
@@ -409,11 +409,11 @@ export const aditionalStyles = styles + `
 }
 .button-45:hover {
   background-color: #7BDCB5;
-  border-color: ${background_color};
+  border-color: ${background_color || '#007bff'};
 }
 .button__container {
   border: none;
-  background-color: ${background_color};
+  background-color: ${background_color || '#007bff'};
   width: 60px;
   height: 60px;
   border-radius: 50%;
