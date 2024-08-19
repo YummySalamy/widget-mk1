@@ -30,6 +30,7 @@ class MessageWidget {
   async initialize() {
     const container = document.createElement("div");
     container.style.position = "fixed";
+    container.style.zIndex = "9999";
     Object.keys(this.position).forEach(
       (key) => (container.style[key] = this.position[key])
     );

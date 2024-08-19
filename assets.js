@@ -417,7 +417,7 @@ export const aditionalStyles = styles + `
   text-decoration: none;
   text-shadow: none;
   text-underline-offset: 1px;
-  transition: border .2s ease-in-out,box-shadow .2s ease-in-out;
+  transition: all 0.3s ease;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
