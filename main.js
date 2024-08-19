@@ -298,7 +298,7 @@ async addMessageSession(question, answer) {
 // }
 
 createWebSocketConnection() {
-  this.socket = new WebSocket('wss://dev-aichain-chatbot-users-qd5u6w2c6q-uc.a.run.app');
+  this.socket = new WebSocket('https://dev-aichain-chatbot-messenger-ydpzijw4tq-uc.a.run.app/web/webhook');
 
   this.socket.onopen = () => {
     console.log('WebSocket connection opened');
@@ -328,8 +328,8 @@ sendMessage(query) {
 
   const data = {
     session_id: chatbotSessionId,
-    owner_id: chatbotId,
-    user_id: userId,
+    owner_id: userId,
+    user_id: 'xd-test-123',
     text: query,
   };
 

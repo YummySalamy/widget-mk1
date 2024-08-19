@@ -209,8 +209,8 @@ export const styles = `
     box-shadow: 0 0 18px 8px rgba(0, 0, 0, 0.1), 0 0 32px 32px rgba(0, 0, 0, 0.08);
     width: 400px;
     overflow: auto;
-    right: 80px;
-    bottom: 108px;
+    right: 60px;
+    bottom: 100px;
     position: fixed;
     transition: max-height 0.2s ease;
     font-family: 'Segoe UI', Roboto;
@@ -430,6 +430,9 @@ export const aditionalStyles = styles + `
   border-color: ${background_color || '#007bff'};
 }
 .button__container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
   border: none;
   background-color: ${background_color || '#007bff'};
   width: 60px;
