@@ -209,9 +209,9 @@ export const styles = `
     box-shadow: 0 0 18px 8px rgba(0, 0, 0, 0.1), 0 0 32px 32px rgba(0, 0, 0, 0.08);
     width: 400px;
     overflow: auto;
-    right: 40px;
-    bottom: 85px;
-    position: absolute;
+    right: 80px;
+    bottom: 108px;
+    position: fixed;
     transition: max-height 0.2s ease;
     font-family: 'Segoe UI', Roboto;
     background-color: #e6e6e6a6;
@@ -221,6 +221,7 @@ export const styles = `
     transform-origin: right bottom;
     -webkit-transition: width 200ms ease,height 300ms ease,max-height 300ms ease,-webkit-transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275),opacity 83ms ease-out;
     transition: width 200ms ease,height 300ms ease,max-height 300ms ease,transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275),opacity 83ms ease-out;
+    z-index: 9999;
   }
 
   .widget__icon {
