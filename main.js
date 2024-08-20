@@ -28,6 +28,14 @@ class MessageWidget {
   }
 
   async initialize() {
+    //insert new font in the the head
+    const head = document.head;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap';
+    head.appendChild(link);
+
     const container = document.createElement("div");
     // container.style.position = "fixed";
     container.style.zIndex = "9999";
@@ -74,25 +82,6 @@ class MessageWidget {
       
       messageInput.value = '';
     });
-
-    // sendButton.addEventListener('click', async (event) => {
-    // event.preventDefault();
-    // const messageInput = container.querySelector('#messageInput');
-    // const userMessage = messageInput.value.trim();
-
-    // if (userMessage === '') return;
-
-    // this.displayMessage(userMessage, 'user');
-
-    // try {
-    //   const chatbotResponse = await this.sendChatbotRequest(userMessage);
-    //   this.displayMessage(chatbotResponse, 'bot');
-    // } catch (error) {
-    //   console.error('Error fetching chatbot response:', error);
-    // }
-
-    // messageInput.value = '';
-  // });
 
 }
 
@@ -149,85 +138,6 @@ async createChatbotSession() {
   }
 }
 
-// async sendChatbotRequest(query) {
-//   const script = document.getElementById('chatbotParameters');
-//   const chatbotId = script.getAttribute('chatbotId');
-//   const userId = script.getAttribute('userId');
-//   const chatbot_url = 'https://dev-aichain-chatbot-users-qd5u6w2c6q-uc.a.run.app';
-//   const endpoint = `https://aichain-chat-api-v2-qd5u6w2c6q-uc.a.run.app/conversation_stream`;
-//   const secret_token = 'chatpgt-token-xkaos2z';
-//   const headers = {'token': secret_token};
-//   const chatbotSessionId = localStorage.getItem('chatbotSessionId');
-
-//   const data = {
-//     question: query,
-//     metadata: {
-//       "userId": userId,
-//       "sessionId": "12345",
-//       "chatbotId": chatbotId,
-//       "channelType": "WEB"
-//     }
-//   };
-
-//   try {
-//     const response = await fetch(endpoint, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         ...headers, 
-//       },
-//       body: JSON.stringify(data),
-//     });
-
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-
-//     const reader = response.body.getReader();
-//     const decoder = new TextDecoder("utf-8");
-//     let partialData = '';
-//     let chatbotMessages = [];
-
-//     let chatbotMessage = '';
-//     let finalMessage = '';
-
-//     while (true) {
-//       const { done, value } = await reader.read();
-    
-//       if (done) {
-//         break;
-//       }
-    
-//       partialData += new TextDecoder("utf-8").decode(value);
-    
-//       if (partialData.startsWith("data: ")) {
-//         const eventData = partialData.substring(6);
-    
-//         if (eventData.includes("content")) {
-//           const contentStart = eventData.indexOf('"content": "') + 12;
-//           const contentEnd = eventData.indexOf('",', contentStart);
-//           if (contentStart !== -1 && contentEnd !== -1) {
-//             const chatMessage = eventData.substring(contentStart, contentEnd);
-//             console.log("Chatbot Message:", chatMessage);
-//             finalMessage += chatMessage;
-//             // Mostrar el mensaje en tiempo real en la interfaz
-//             this.displayMessage(chatMessage, 'bot');
-//           }
-//         }
-    
-//         partialData = partialData.substring(eventData.length + 7);
-
-//       }
-//     }
-//     this.addMessageSession(query, finalMessage);
-//     console.log*("Final Message:", finalMessage);
-//     return chatbotMessage;
-
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
 async addMessageSession(question, answer) {
   const decodedAnswer = unescapeStr(answer);
   const url = "https://aichain-chat-api-v2-qd5u6w2c6q-uc.a.run.app/add_message";
@@ -272,31 +182,6 @@ async addMessageSession(question, answer) {
   }
 }
 
-// displayMessage(text, sender) {
-//   const chatBox = document.querySelector('.chat-box');
-//   const chatContainer = document.querySelector('.chat-container');
-  
-//   // Buscar el último mensaje en el chat
-//   const lastMessage = chatBox.querySelector('.chat-message:last-child');
-  
-//   // Si el último mensaje es del mismo remitente, agregar al contenido existente
-//   if (lastMessage && lastMessage.classList.contains(`message-${sender}`)) {
-//     const messageContent = lastMessage.querySelector('.message-content');
-//     messageContent.textContent += unescapeStr(text);
-//   } else {
-//     // Si es un nuevo remitente o el primer mensaje, crear un nuevo elemento de mensaje
-//     const chatMessage = document.createElement('div');
-//     chatMessage.classList.add('chat-message', `message-${sender}`);
-//     chatMessage.innerHTML = `<div class="message-content">${unescapeStr(text)}</div>`;
-    
-//     chatBox.appendChild(chatMessage);
-//     chatBox.scrollTop = chatBox.scrollHeight
-//   }
-//   chatContainer.scrollTop = chatContainer.scrollHeight;
-//   chatBox.scrollTop = chatBox.scrollHeight;
-  
-// }
-
 createWebSocketConnection() {
   this.socket = new WebSocket('https://dev-aichain-chatbot-messenger-ydpzijw4tq-uc.a.run.app/web/webhook');
 
@@ -320,21 +205,42 @@ createWebSocketConnection() {
   };
 }
 
-sendMessage(query) {
+async sendMessage(query) {
   const script = document.getElementById('chatbotParameters');
   const chatbotId = script.getAttribute('chatbotId');
   const userId = script.getAttribute('userId');
   const chatbotSessionId = localStorage.getItem('chatbotSessionId');
 
   const data = {
-    session_id: chatbotSessionId,
+    session_id: '7c23f9af-dfde-49cb-843f-d1d8184cf344',
     owner_id: userId,
     user_id: 'xd-test-123',
     text: query,
   };
 
-  this.socket.send(JSON.stringify(data));
+  try {
+    const response = await fetch('https://dev-aichain-chatbot-messenger-ydpzijw4tq-uc.a.run.app/web/webhook', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Token': '123456',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to send message");
+    }
+
+    const responseData = await response.json();
+    if (responseData.status) {
+      this.displayMessage(responseData.answer, 'bot');
+    }
+  } catch (error) {
+    console.error('Error sending message:', error);
+  }
 }
+
 
 displayMessage(text, sender) {
   const chatBox = document.querySelector('.chat-box');
@@ -363,8 +269,6 @@ displayPreviousMessages(text, sender) {
   chatBox.scrollTop = chatBox.scrollHeight;
   
 }
-
-
 
   createWidgetContent() {
     this.widgetContainer.innerHTML = `
@@ -405,37 +309,20 @@ displayPreviousMessages(text, sender) {
     document.body.appendChild(secondStyleTag);
   }
 
-  // toggleOpen() {
-  //   this.open = !this.open;
-  //   if (this.open) {
-  //     this.widgetIcon.classList.add("widget__hidden");
-  //     this.closeIcon.classList.remove("widget__hidden");
-  //     this.widgetContainer.classList.remove("widget__hidden");
-  //     this.createChatbotSession();
-  //   } else {
-  //     this.createWidgetContent();
-  //     this.widgetIcon.classList.remove("widget__hidden");
-  //     this.closeIcon.classList.add("widget__hidden");
-  //     this.widgetContainer.classList.add("widget__hidden");
-  //   }
-  // }
-
   toggleOpen() {
     this.open = !this.open;
     if (this.open) {
       this.widgetIcon.classList.add("widget__hidden");
       this.closeIcon.classList.remove("widget__hidden");
       this.widgetContainer.classList.remove("widget__hidden");
-      this.createWebSocketConnection();  // Create WebSocket connection when widget is opened
+      
       this.createChatbotSession();
     } else {
       this.createWidgetContent();
       this.widgetIcon.classList.remove("widget__hidden");
       this.closeIcon.classList.add("widget__hidden");
       this.widgetContainer.classList.add("widget__hidden");
-      if (this.socket) {
-        this.socket.close();  // Close WebSocket connection when widget is closed
-      }
+      
     }
   }
 }
