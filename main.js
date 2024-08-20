@@ -253,6 +253,9 @@ displayMessage(text, sender) {
 
   const chatMessage = document.createElement('div');
   chatMessage.classList.add('chat-message', `message-${sender}`);
+  if (sender === 'bot') {
+    chatMessage.style.animation = 'slideInFromLeft 0.5s';
+  }
   chatMessage.innerHTML = `<div class="message-content">${unescapeStr(text)}</div>`;
 
   chatBox.appendChild(chatMessage);

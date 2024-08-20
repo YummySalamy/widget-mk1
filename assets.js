@@ -136,7 +136,6 @@ export const styles = `
     background: linear-gradient(135deg, #f0f0f0, #ccc);
     color: #333;
     border-bottom-left-radius: 2px;
-    animation: slideInFromLeft 0.5s;
   }
 
   @keyframes slideInFromLeft {
