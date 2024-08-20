@@ -1,5 +1,5 @@
-import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles, chatbotWindowName, welcomeMessage, placeHolder, iconUrl } from "./assets.js";
-
+import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles, chatbotWindowName, welcomeMessage, placeHolder } from "./assets.js";
+const iconUrl = localStorage.getItem('icon_url');
 function unescapeStr(str) {
   return str.replace(/\\u[\dA-F]{4}/gi, function (match) {
     return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
@@ -20,6 +20,11 @@ class MessageWidget {
   widgetContainer = null;
 
   getPosition(position) {
+    const userExists = localStorage.getItem('user_id') !== null;
+    if (!userExists) {
+      const userId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('user_id', userId);
+    }
     const [vertical, horizontal] = position.split("-");
     return {
       [vertical]: "30px",
@@ -88,9 +93,9 @@ class MessageWidget {
 async createChatbotSession() {
   const url = "https://dev-aichain-chatbot-upload-ydpzijw4tq-uc.a.run.app/chatbot/sessions";
   const script = document.getElementById('chatbotParameters')
-  const chatbotId = script.getAttribute('chatbotId');
+  const chatbotId = script.getAttribute('cgf');
   const channel_type = "WEB";
-  const userId = script.getAttribute('userId');
+  const userId = script.getAttribute('thx');
   const chatbotSessionId = localStorage.getItem('chatbotSessionId');
   const sessionId = null;
   this.messages.length = 0;
@@ -142,9 +147,9 @@ async addMessageSession(question, answer) {
   const decodedAnswer = unescapeStr(answer);
   const url = "https://aichain-chat-api-v2-qd5u6w2c6q-uc.a.run.app/add_message";
   const script = document.getElementById('chatbotParameters')
-  const chatbotId = script.getAttribute('chatbotId');
+  const chatbotId = script.getAttribute('cgf');
   const channel_type = "WEB";
-  const userId = script.getAttribute('userId');
+  const userId = script.getAttribute('thx');
   const chatbotSessionId = localStorage.getItem('chatbotSessionId');
   const secret_token = 'chatpgt-token-xkaos2z';
   const headers = {'token': secret_token};
@@ -207,14 +212,14 @@ createWebSocketConnection() {
 
 async sendMessage(query) {
   const script = document.getElementById('chatbotParameters');
-  const chatbotId = script.getAttribute('chatbotId');
-  const userId = script.getAttribute('userId');
-  const chatbotSessionId = localStorage.getItem('chatbotSessionId');
+  const session_id = script.getAttribute('vrx');
+  const owner_id = script.getAttribute('thx');
+  const user_id = localStorage.getItem('user_id');
 
   const data = {
-    session_id: '7c23f9af-dfde-49cb-843f-d1d8184cf344',
-    owner_id: userId,
-    user_id: 'xd-test-123',
+    session_id: session_id,
+    owner_id: owner_id,
+    user_id: user_id,
     text: query,
   };
 
@@ -273,8 +278,8 @@ displayPreviousMessages(text, sender) {
   createWidgetContent() {
     this.widgetContainer.innerHTML = `
     <header class="widget__header">
-      <h2>${chatbotWindowName}</h2>
       <img class='icon-style' src=${iconUrl}></img>
+      <h2>${chatbotWindowName}</h2>
     </header>
 
     <div class="chat-container">
@@ -293,7 +298,7 @@ displayPreviousMessages(text, sender) {
     <button class="button-45" role="button" type="submit">Enviar</button>
     </form>
     <footer class="poweredByContainer">
-      <p class="footer__text">Powered by <a class='nubot-link' href='nubot.io' target='_blank'>nubot.io</a></p>
+      <p class="footer__text">Powered by <a class='nubot-link' href='https://nubot.io' target='_blank'>nubot.io</a></p>
     </footer>
     `;
   }

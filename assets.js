@@ -1,5 +1,5 @@
 const script = document.getElementById('chatbotParameters');
-let chatbotId = script.getAttribute('chatbotId');
+let chatbotId = script.getAttribute('cgf');
 console.log(typeof chatbotId);
 const url = `https://dev-aichain-chatbot-upload-ydpzijw4tq-uc.a.run.app/chatbot/`;
 const secret_token = 123456;
@@ -136,6 +136,16 @@ export const styles = `
     background: linear-gradient(135deg, #f0f0f0, #ccc);
     color: #333;
     border-bottom-left-radius: 2px;
+    animation: slideInFromLeft 0.5s;
+  }
+
+  @keyframes slideInFromLeft {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
   }
 
   .input-container {
@@ -215,7 +225,7 @@ export const styles = `
     transition: max-height 0.2s ease;
     font-family: 'Segoe UI', Roboto;
     background-color: #e6e6e6a6;
-    border-radius: 10px;
+    border-radius: 30px;
     box-sizing: border-box;
     transform: scale(1);
     transform-origin: right bottom;
@@ -248,7 +258,10 @@ export const styles = `
   }
 
   .widget__header {
-    padding: 1px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
     align-self: flex-end;
     background: linear-gradient(135deg, #FFA500, #FF0000);
     color: #fff;
@@ -260,7 +273,7 @@ export const styles = `
   .widget__header h3 {
     font-size: 24px;
     font-weight: 400;
-    margin-bottom: 8px;
+    margin: 0;
   }
   .button-45 {
     align-items: center;
@@ -367,6 +380,7 @@ export const styles = `
   align-items: center;
   border: 1px solid #ccc;
   height: 40px;
+  background-color: #f4f4f4;
 }
 
 .nubot-link {
@@ -385,13 +399,17 @@ const background_color = localStorage.getItem('background_color');
 
 export const aditionalStyles = styles + `
 .widget__header {
-  padding: 1px;
+  padding: 0.4rem;
   align-self: flex-end;
   background: ${background_color || '#007bff'};
   color: #fff;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   text-align: center;
+}
+
+.widget__header img {
+  border: 2px solid #ccc;
 }
 .message-user {
   align-self: flex-end;
