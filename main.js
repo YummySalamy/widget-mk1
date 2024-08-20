@@ -293,7 +293,7 @@ displayPreviousMessages(text, sender) {
     <button class="button-45" role="button" type="submit">Enviar</button>
     </form>
     <footer class="poweredByContainer">
-      <p class="footer__text">Powered by <a class='nubot-link' href='youtube.com' target='_blank'>nubot.io</a></p>
+      <p class="footer__text">Powered by <a class='nubot-link' href='nubot.io' target='_blank'>nubot.io</a></p>
     </footer>
     `;
   }
