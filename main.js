@@ -95,8 +95,8 @@ async createChatbotSession() {
   const script = document.getElementById('chatbotParameters')
   const chatbotId = script.getAttribute('cgf');
   const channel_type = "WEB";
-  const userId = script.getAttribute('thx');
-  const chatbotSessionId = localStorage.getItem('chatbotSessionId');
+  const userId = localStorage.getItem('user_id');
+  const chatbotSessionId = script.getAttribute('vrx');
   const sessionId = null;
   this.messages.length = 0;
 
@@ -104,7 +104,7 @@ async createChatbotSession() {
     chatbot_id: chatbotId,
     channel_type: channel_type,
     user_id: userId,
-    session_id: chatbotSessionId,
+    session_id: userId,
   };
 
   try {
