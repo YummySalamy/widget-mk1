@@ -1,4 +1,4 @@
-import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles, chatbotWindowName, welcomeMessage, placeHolder } from "./assets.js";
+import { CLOSE_ICON, MESSAGE_ICON, styles, aditionalStyles, chatbotWindowName, welcomeMessage, placeHolder, openChatbot } from "./assets.js";
 const iconUrl = localStorage.getItem('icon_url');
 function unescapeStr(str) {
   return str.replace(/\\u[\dA-F]{4}/gi, function (match) {
@@ -9,14 +9,14 @@ function unescapeStr(str) {
 class MessageWidget {
   constructor(position = "bottom-right") {
     this.position = this.getPosition(position);
-    this.open = false;
+    this.open = !openChatbot;
     this.initialize();
     this.injectStyles();
     this.messages = [];
   }
 
   position = "";
-  open = false;
+  open = !openChatbot;
   widgetContainer = null;
 
   getPosition(position) {
@@ -87,7 +87,7 @@ class MessageWidget {
       
       messageInput.value = '';
     });
-
+    this.toggleOpen();
 }
 
 async createChatbotSession() {
@@ -330,7 +330,6 @@ displayPreviousMessages(text, sender) {
       this.widgetIcon.classList.remove("widget__hidden");
       this.closeIcon.classList.add("widget__hidden");
       this.widgetContainer.classList.add("widget__hidden");
-      
     }
   }
 }

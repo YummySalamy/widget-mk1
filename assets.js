@@ -1,4 +1,5 @@
 const script = document.getElementById('chatbotParameters');
+let opened = script.getAttribute('opened');
 let chatbotId = script.getAttribute('cgf');
 console.log(typeof chatbotId);
 const url = `https://dev-aichain-chatbot-upload-ydpzijw4tq-uc.a.run.app/chatbot/`;
@@ -58,6 +59,7 @@ export const chatbotWindowName = localStorage.getItem('window_chatbot_name') || 
 export const welcomeMessage = localStorage.getItem('welcome_message') || '¡Hola!, ¿en qué puedo ayudarte?';
 export const placeHolder = localStorage.getItem('place_holder')  || 'Escribe un mensaje...';
 export const iconUrl = localStorage.getItem('icon_url') || 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png';
+export const openChatbot = opened === 'true' ? true : false;
 
 export const styles = `
   .icon-style {
@@ -336,7 +338,6 @@ export const styles = `
   flex-grow: 1;
   margin-right: 10px;
   padding: 0.8em;
-  padding-right: 8.3em;
   outline: none;
   border: 2px solid rgb(200, 200, 200);
   background-color: transparent;
